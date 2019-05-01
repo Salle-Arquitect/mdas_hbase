@@ -4,7 +4,7 @@ jobs:
     machine: true
     steps:
       - checkout
-      - run: docker-compose up -d
+      - run: docker-compose -f docker-compose-standalone.yml  up -d
       - run:
           name: Waiting for Hbase to be ready
           command: |

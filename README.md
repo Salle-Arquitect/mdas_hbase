@@ -15,9 +15,9 @@ git clone https://github.com/eloirobe/mdas_hbase.git
 ```bash
 cd mdas_hbase
 ## En modo stdout
-docker-compose docker-compose-standalone.yml up
+docker-compose -f docker-compose-standalone.yml up
 ## En modo silencioso
-docker-compose docker-compose-standalone.yml up -d
+docker-compose -f docker-compose-standalone.yml up -d
 ```
 3) Una vez haya arrancado loguearse en la console
 ```bash
