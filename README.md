@@ -21,7 +21,7 @@ docker-compose -f docker-compose-standalone.yml up -d
 ```
 3) Una vez haya arrancado loguearse en la console
 ```bash
-docker-compose exec hbase bash
+docker-compose -f docker-compose-standalone.yml exec hbase bash
 ```
 4) En el directorio files se pueden copiar los datasets para introducir los datos
 
