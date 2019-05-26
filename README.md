@@ -23,7 +23,12 @@ docker-compose -f docker-compose-standalone.yml up -d
 ```bash
 docker-compose -f docker-compose-standalone.yml exec hbase bash
 ```
-4) En el directorio files se pueden copiar los datasets para introducir los datos
+4) Para acceder a la shell de hive una vez dentro de la console
+```bash
+hbase shell
+```
+
+5) En el directorio files se pueden copiar los datasets para introducir los datos
 
 ## Contributors
 This is a fork from [https://github.com/big-data-europe/docker-hbase](https://github.com/big-data-europe/docker-hbase)
