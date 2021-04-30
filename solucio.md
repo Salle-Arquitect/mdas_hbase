@@ -126,8 +126,18 @@ scan 'bdne:accidentes', { FILTER => "SingleColumnValueFilter('fecha_evento','nom
 ```
 
 ## Noche:
+```hbase
+scan 'bdne:accidentes', { FILTER => "SingleColumnValueFilter('detalles','turno',= ,'binary:Noche')" }
+```
 
 ## Solución:
+```hbase
+scan 'bdne:accidentes', { FILTER =>
+    "SingleColumnValueFilter('detalles','tipo_accidente',=,'binary:Atropellament') \
+ AND SingleColumnValueFilter('fecha_evento','nombre_dia',= ,'binary:Lunes') \
+ AND SingleColumnValueFilter('detalles','turno',=,'binary:Noche')"
+}
+```
 
 # 9)
 ```hbase
