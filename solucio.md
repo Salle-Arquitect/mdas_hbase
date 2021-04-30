@@ -139,9 +139,14 @@ scan 'bdne:accidentes', { FILTER =>
 }
 ```
 
-# 9)
+# 9) Actualiza la fecha del accidente con código "2018S008673", la fecha correcta es Martes 13/11/2018
 ```hbase
 put 'table','row','columnFamily:column','value'
+```
+```hbase
+TODO
+put 'bdne:accidentes','2018S008673','columnFamily:column','value'
+scan , { FILTER =>
 ```
 
 
