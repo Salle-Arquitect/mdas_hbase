@@ -71,6 +71,23 @@ Solo hay una row que no empieze por 2018
 deleteall 'bdne:accidentes','Código Expediente'
 ```
 
+Se hace estraño, porque el output no acaba de parecer coherente:
+```output
+0 row(s) in 0.0300 seconds
+```
+
+Entonces las comprovaciones de que realmente ha funcionado:
+```check
+hbase(main):004:0> scan 'bdne:accidentes', { FILTER => "RowFilter(!=, 'regexstring:^2018')" }
+ROW                                                  COLUMN+CELL
+0 row(s) in 0.0970 seconds
+
+count 'bdne:accidentes'
+=> 9926
+```
+
+Si, se a eliminado correctamente la fila de más.
+
 # 5) Muestra los 5 primeros registros de la tabla. Usando LIMIT
 ```hbase
 scan 'bdne:accidentes', { LIMIT => 5 }
@@ -140,38 +157,47 @@ scan 'bdne:accidentes', { FILTER =>
 ```
 
 # 9) Actualiza la fecha del accidente con código "2018S008673", la fecha correcta es Martes 13/11/2018
+Comprovamos que valores tiene correctos
 ```hbase
-put 'table','row','columnFamily:column','value'
+get 'bdne:accidentes','2018S008673'
+hbase(main):017:0> get 'bdne:accidentes','2018S008673'
+COLUMN                                               CELL
+ detalles:tipo_accidente                             timestamp=1619851241949, value=Abast
+ detalles:turno                                      timestamp=1619851241949, value=Tarde
+ fecha_evento:a\xC3\xB1o                             timestamp=1619851241949, value=2018
+ fecha_evento:dia                                    timestamp=1619851241949, value=12
+ fecha_evento:hora                                   timestamp=1619851241949, value=18
+ fecha_evento:mes                                    timestamp=1619851241949, value=11
+ fecha_evento:nombre_dia                             timestamp=1619851241949, value=Lunes
+ fecha_evento:nombre_mes                             timestamp=1619851241949, value=Noviembre
+ lugar:barrio                                        timestamp=1619851241949, value=les Corts
+ lugar:distrito                                      timestamp=1619851241949, value=Les Corts
+10 row(s) in 0.0200 seconds
 ```
+
+Los valores que tenemos que mantener es el `fecha_evento:año` y `fecha_evento:mes` como `fecha_evento:nombre_mes`.
+Tanto el `fecha_evento:nombre_dia` como `fecha_evento:dia` se tienen que actualizar.
+Al parecer solo hay un error de 1 dia.
+
+## Solución
 ```hbase
-TODO
-put 'bdne:accidentes','2018S008673','columnFamily:column','value'
-scan , { FILTER =>
+put 'bdne:accidentes','2018S008673','fecha_evento:nombre_dia','Martes'
+put 'bdne:accidentes','2018S008673','fecha_evento:dia',13
 ```
 
-
-# Miselanius
+## Comprovación
 ```hbase
-get 'table','row'
-scan 'table'
-
-crud 11, abansat
-scan 'bdne:accidentes'
-
-neteja
-truncate 'table'
-
-scan 'users',
-{
- COLUMNS => ['contact_infromation:name', 'contact_information:city']
- LIMIT -> 1,
- STARTROW -> "2",
- FILTER =>
-  RowFilter.new(
-   CompareFilter::CompareOp.valueOf('EQUAL'),
-   BinaryComparator.new(
-    Bytes.toBytes('2')
-   )
-  )
-}
+get 'bdne:accidentes','2018S008673'
+COLUMN                                               CELL
+ detalles:tipo_accidente                             timestamp=1619851241949, value=Abast
+ detalles:turno                                      timestamp=1619851241949, value=Tarde
+ fecha_evento:a\xC3\xB1o                             timestamp=1619851241949, value=2018
+ fecha_evento:dia                                    timestamp=1619852229251, value=13
+ fecha_evento:hora                                   timestamp=1619851241949, value=18
+ fecha_evento:mes                                    timestamp=1619851241949, value=11
+ fecha_evento:nombre_dia                             timestamp=1619852219440, value=Martes
+ fecha_evento:nombre_mes                             timestamp=1619851241949, value=Noviembre
+ lugar:barrio                                        timestamp=1619851241949, value=les Corts
+ lugar:distrito                                      timestamp=1619851241949, value=Les Corts
+10 row(s) in 0.0100 seconds
 ```

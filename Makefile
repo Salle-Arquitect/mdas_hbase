@@ -19,5 +19,8 @@ wordcount:
 dcu:
 	docker-compose -f docker-compose-standalone.yml up
 
+dcd:
+	docker-compose -f docker-compose-standalone.yml down --remove-orphans --volumes
+
 dce:
 	docker-compose -f docker-compose-standalone.yml exec hbase bash -c 'echo hbase shell && bash'
