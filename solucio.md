@@ -76,7 +76,7 @@ Se hace estraño, porque el output no acaba de parecer coherente:
 0 row(s) in 0.0300 seconds
 ```
 
-Entonces las comprovaciones de que realmente ha funcionado:
+Entonces las comprobaciones de que realmente ha funcionado:
 ```check
 hbase(main):004:0> scan 'bdne:accidentes', { FILTER => "RowFilter(!=, 'regexstring:^2018')" }
 ROW                                                  COLUMN+CELL
@@ -86,7 +86,7 @@ count 'bdne:accidentes'
 => 9926
 ```
 
-Si, se a eliminado correctamente la fila de más.
+Si, se ha eliminado correctamente la fila de más.
 
 # 5) Muestra los 5 primeros registros de la tabla. Usando LIMIT
 ```hbase
@@ -94,7 +94,7 @@ scan 'bdne:accidentes', { LIMIT => 5 }
 ```
 
 # 6) Muestra los 5 primeros registros de la tabla. Sin usar LIMIT, busca un Filter que te permita hacerlo.
-## Investiguació:
+## Investigació
 ```hbase
 show_filters
 ```
@@ -132,22 +132,22 @@ scan 'bdne:accidentes', { FILTER => "ValueFilter(=, 'binary:Desconegut')" }
 ```
 
 # 8) Muestra todos los accidentes de "Atropellament" que hayan sido en Lunes por la Noche
-## Atropellament:
+## Atropellament
 ```hbase
 scan 'bdne:accidentes', { FILTER => "SingleColumnValueFilter('detalles','tipo_accidente',= ,'binary:Atropellament')" }
 ```
 
-## Lunes:
+## Lunes
 ```hbase
 scan 'bdne:accidentes', { FILTER => "SingleColumnValueFilter('fecha_evento','nombre_dia',= ,'binary:Lunes')" }
 ```
 
-## Noche:
+## Noche
 ```hbase
 scan 'bdne:accidentes', { FILTER => "SingleColumnValueFilter('detalles','turno',= ,'binary:Noche')" }
 ```
 
-## Solución:
+## Solució
 ```hbase
 scan 'bdne:accidentes', { FILTER =>
     "SingleColumnValueFilter('detalles','tipo_accidente',=,'binary:Atropellament') \
@@ -177,15 +177,15 @@ COLUMN                                               CELL
 
 Los valores que tenemos que mantener es el `fecha_evento:año` y `fecha_evento:mes` como `fecha_evento:nombre_mes`.
 Tanto el `fecha_evento:nombre_dia` como `fecha_evento:dia` se tienen que actualizar.
-Al parecer solo hay un error de 1 dia.
+Al parecer solo hay un error de 1 día.
 
-## Solución
+## Solució
 ```hbase
 put 'bdne:accidentes','2018S008673','fecha_evento:nombre_dia','Martes'
 put 'bdne:accidentes','2018S008673','fecha_evento:dia',13
 ```
 
-## Comprovación
+## Comprovació
 ```hbase
 get 'bdne:accidentes','2018S008673'
 COLUMN                                               CELL
